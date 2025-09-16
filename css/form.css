@@ -1,0 +1,49 @@
+form {
+    padding: 16px;
+    border-radius: 16px;
+    border: solid 2px var(--theme-color-gray);
+}
+
+label {
+    width: 100%;
+    font-style: italic;
+    padding-left: 6px;
+    margin-bottom: 3px;
+    display: block;
+}
+
+form h1,
+h2,
+h3 {
+    margin-bottom: 6px;
+}
+
+
+
+/* NHÓM  */
+form .flex-row-container .input-error-group,
+select {
+    flex: 0 1 calc(50% - 5px);
+}
+
+form>.group-button>button {
+    margin-bottom: 0;
+}
+
+
+
+/* NHÓM INPUT, SELECT VÀ BÁO LỖI */
+.input-error-group {
+    margin-bottom: 10px;
+}
+
+.input-error-group>input,
+.input-error-group>select {
+    margin-bottom: 6px;
+}
+
+.input-error-group>.error {
+    height: 12px;
+    color: var(--theme-color-error);
+
+}

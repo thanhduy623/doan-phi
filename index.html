@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/logo-doan.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Chi đoàn</title>
+
+    <style>
+        .main-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 65px);
+
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url("./picture/background.png");
+        }
+
+        form {
+            text-align: center;
+            min-width: 360px;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.85);
+        }
+
+        label {
+            text-align: left;
+        }
+
+        .logo {
+            height: 120px;
+        }
+
+        #submitBtn {
+            display: block;
+            margin: 0 auto;
+            height: 42px;
+        }
+
+        #error-mess {
+            color: red;
+            font-style: italic;
+            margin-bottom: 16px;
+            height: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img class="logo" src="../picture/logo-tdtu.png" alt="logo-tdtu">
+        <img class="logo" src="../picture/logo-doan.png" alt="logo-doan">
+        <h1 class="title">HỆ THỐNG ĐOÀN PHÍ TDTU</h1>
+    </header>
+
+    <div class="main-container">
+        <form id="loginForm">
+            <div>
+                <img class="logo" src="./picture/logo-doan.png" alt="">
+                <h1>ĐĂNG NHẬP</h1>
+            </div>
+
+            <div>
+                <label>Tài khoản</label>
+                <input type="text" id="username">
+            </div>
+
+            <div>
+                <label>Mật khẩu</label>
+                <input type="password" id="password">
+            </div>
+
+            <p id="error-mess"></p>
+
+            <button type="submit" id="submitBtn" class="primary">ĐĂNG NHẬP</button>
+        </form>
+    </div>
+</body>
+
+<script type="module">
+    import { connectGAS } from '../util/connectGAS.js';
+
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+    const errorInput = document.getElementById("error-mess");
+    const form = document.getElementById("loginForm");
+
+    form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+        errorInput.value = '';
+
+        // Kiểm tra dữ liệu bắt buộc
+        if (!username || !password) {
+            errorInput.textContent = "Vui lòng nhập đầy đủ tài khoản và mật khẩu";
+            errorInput.style.color = "red";
+            return;
+        }
+
+
+        try {
+            const result = await connectGAS("login", { username, password });
+            console.log(result)
+
+            if (result.success) {
+                sessionStorage.setItem("token", result.token);
+                window.location.href = "/views/thu-doan-phi.html";
+            } else {
+                errorInput.textContent = result.message || "Đăng nhập thất bại";
+            }
+
+        } catch (error) {
+            errorInput.textContent = "Lỗi khi đăng nhập, vui lòng thử lại.";
+            console.error(error);
+        }
+    });
+</script>
+
+</html>

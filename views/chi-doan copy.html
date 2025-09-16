@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/logo-doan.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Chi đoàn</title>
+</head>
+
+<body>
+    <header>
+        <img class="logo" src="../picture/logo-tdtu.png" alt="logo-tdtu">
+        <img class="logo" src="../picture/logo-doan.png" alt="logo-doan">
+        <h1 class="title">HỆ THỐNG ĐOÀN PHÍ TDTU</h1>
+    </header>
+
+    <div class="main-container">
+        <section class="summary">
+            <div class="card-summary">
+                <h3>Đoàn viên đã thu</h3>
+                <p>XX/XX</p>
+            </div>
+            <div class="card-summary">
+                <h3>Đoàn phí đã thu</h3>
+                <p>X.XXX</p>
+            </div>
+            <div class="card-summary">
+                <h3>Đoàn phí cần nộp</h3>
+                <p>X.XXX</p>
+            </div>
+        </section>
+
+        <section class="table-data">
+            <div class="header-table">
+                <h2 class="title-table">Danh sách đoàn viên trực thuộc</h2>
+                <button>Làm mới</button>
+                <button>Nộp cấp trên</button>
+            </div>
+
+            <table>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã chi đoàn</th>
+                    <th>Mã sinh viên</th>
+                    <th>Họ lót</th>
+                    <th>Tên</th>
+                    <th>Hành động</th>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>25000101</td>
+                    <td>02500040</td>
+                    <td>Phùng Thị Lan Anh</td>
+                    <td>Anh</td>
+                    <td>
+                        <button>➤</button>
+                    </td>
+                </tr>
+            </table>
+        </section>
+    </div>
+</body>
+
+<script>
+    let students = [];
+
+    // Tạo dữ liệu tạm thời
+    function getDataList() {
+        students = [
+            {
+                stt: 1,
+                maChiDoan: "25000101",
+                msv: "02500040",
+                hoLot: "Phùng Thị Lan Anh",
+                ten: "Anh",
+                monthPaid: "2025-09"
+            },
+            {
+                stt: 2,
+                maChiDoan: "25000102",
+                msv: "02500041",
+                hoLot: "Nguyễn Văn B",
+                ten: "B",
+                monthPaid: "2025-08"
+            }
+        ];
+
+        const table = document.querySelector("table");
+        table.querySelectorAll("tr:not(:first-child)").forEach(row => row.remove());
+
+        students.forEach(student => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+            <td>${student.stt}</td>
+            <td>${student.maChiDoan}</td>
+            <td>${student.msv}</td>
+            <td>${student.hoLot}</td>
+            <td>${student.ten}</td>
+            <td><button>➤</button></td>
+        `;
+            tr.querySelector("button").addEventListener("click", () => showPopup(student));
+            table.appendChild(tr);
+        });
+    }
+
+    // Hiển thị popup
+    function showPopup(student) {
+        const overlay = document.createElement("div");
+        overlay.id = "popupOverlay";
+
+        const popup = document.createElement("div");
+        popup.classList.add("popup");
+        popup.innerHTML = `
+        <h3>Thông tin sinh viên</h3>
+        <label>MSSV:</label>
+        <input type="text" id="msv" value="${student.msv}" readonly>
+        <label>Họ tên:</label>
+        <input type="text" id="fullName" value="${student.hoLot} ${student.ten}" readonly>
+        <label>Đã đóng đến:</label>
+        <input type="month" id="monthPaid" value="${student.monthPaid}">
+        <label>Số tiền cần đóng (VNĐ):</label>
+        <input type="text" id="amountDue" readonly>
+        <div style="margin-top: 10px; text-align: right;">
+            <button id="cancelBtn">Đóng</button>
+            <button id="submitBtn">Thu</button>
+        </div>
+    `;
+        overlay.appendChild(popup);
+        document.body.appendChild(overlay);
+
+        const monthInput = popup.querySelector("#monthPaid");
+        const amountElem = popup.querySelector("#amountDue");
+
+        function updateAmount() {
+            const amount = computeFee(monthInput.value, student.maChiDoan);
+            amountElem.value = amount.toFixed(0);
+        }
+
+        updateAmount();
+        monthInput.addEventListener("change", updateAmount);
+
+        popup.querySelector("#cancelBtn").addEventListener("click", cancel);
+        popup.querySelector("#submitBtn").addEventListener("click", () => submit(student, monthInput.value));
+    }
+
+    // Tính số tiền cần đóng
+    function computeFee(monthPaid, maChiDoan) {
+        const [year, month] = monthPaid.split("-").map(Number);
+        const distance = (year - 2025) * 12 + (month - 9);
+        const chiDoanLeft = Number(maChiDoan.substring(0, 2));
+        return 96000 + distance / (20 + chiDoanLeft);
+    }
+
+    // Submit
+    function submit(student, monthPaid) {
+        const amount = computeFee(monthPaid, student.maChiDoan);
+        alert(`Thu tiền: ${amount.toFixed(0)} VND cho ${student.hoLot} ${student.ten} (${student.msv})`);
+        student.monthPaid = monthPaid;
+        cancel();
+        getDataList();
+    }
+
+    // Hủy popup
+    function cancel() {
+        const overlay = document.getElementById("popupOverlay");
+        if (overlay) overlay.remove();
+    }
+
+    window.onload = getDataList;
+</script>
+
+
+</html>
