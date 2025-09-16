@@ -81,6 +81,9 @@
                         <option value="2025" selected>2025</option>
                         <option value="2026">2026</option>
                         <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        <option value="2029">2029</option>
+                        <option value="2030">2030</option>
                     </select>
                 </div>
             </div>
@@ -91,6 +94,20 @@
                     <input type="text" id="fee" placeholder="Số tiền" readonly>
                 </div>
                 <div class="flex-col-container">
+                    <label>Thu sổ đoàn</label>
+                    <select id="notebook" required>
+                        <option value="Đoàn trường nhận" selected>Đoàn trường nhận</option>
+                        <option value="Đoàn khoa nhận">Đoàn khoa nhận</option>
+                        <option value="Chi đoàn nhận">Chi đoàn nhận</option>
+                        <option value="Chưa rút sổ">Chưa rút sổ</option>
+                        <option value="Mất sổ">Mất sổ</option>
+                        <option value="Chưa kết nạp Đoàn">Chưa kết nạp Đoàn</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex-row-container">
+                <div class="flex-col-container">
                     <label>Ghi chú</label>
                     <input type="text" placeholder="Nhập ghi chú (nếu có)" id="note">
                 </div>
@@ -100,6 +117,7 @@
                 <div style="text-align: left; flex: 1; color: var(--theme-color-1); font-weight: 500;">
                     <p>Xử lí nghiệp vụ: 0XXX.XXX.XXX (Đ/c ...)</p>
                     <p>Xử lí nghiệp vụ: 0XXX.XXX.XXX (Đ/c ...)</p>
+                    <p>Phiên bản:2025.09.1</p>
                 </div>
                 <button type=" button" id="logoutBtn" style="background-color: red;">ĐĂNG XUẤT</button>
                 <button type="reset" id="resetBtn">LÀM MỚI</button>
@@ -125,6 +143,7 @@
     const monthSelect = document.getElementById("month");
     const yearSelect = document.getElementById("year");
     const feeInput = document.getElementById("fee");
+    const noteBookInput = document.getElementById("noteBook");
     const noteInput = document.getElementById("note");
 
     document.addEventListener("DOMContentLoaded", startPage)
@@ -193,6 +212,7 @@
         event.preventDefault();
 
         const mssv = mssvInput.value;
+        const notebook = noteBookInput.value;
         const month = monthSelect.value;
         const year = yearSelect.value;
         const note = noteInput.value;
@@ -205,7 +225,7 @@
         }
 
         try {
-            const result = await connectGAS("collectFee", { mssv, month, year, fee, note })
+            const result = await connectGAS("collectFee", { mssv, month, year, fee, note, notebook })
             console.log(result);
 
             if (result.success) {
