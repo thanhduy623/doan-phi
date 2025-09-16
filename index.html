@@ -83,7 +83,7 @@
 </body>
 
 <script type="module">
-    import { connectGAS } from '../util/connectGAS.js';
+    import { connectGAS } from './util/connectGAS.js';
 
     const usernameInput = document.getElementById("username");
     const passwordInput = document.getElementById("password");
@@ -95,7 +95,7 @@
 
         const username = usernameInput.value.trim();
         const password = passwordInput.value.trim();
-        errorInput.value = '';
+        errorInput.textContent = '';
 
         // Kiểm tra dữ liệu bắt buộc
         if (!username || !password) {
