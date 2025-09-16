@@ -111,7 +111,7 @@
 
             if (result.success) {
                 sessionStorage.setItem("token", result.token);
-                window.location.href = "/views/thu-doan-phi.html";
+                window.location.href = "./views/thu-doan-phi.html";
             } else {
                 errorInput.textContent = result.message || "Đăng nhập thất bại";
             }
