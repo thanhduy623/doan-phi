@@ -164,9 +164,12 @@
     async function getInfoStudent() {
         if (mssvInput.value.length !== 8) return;
 
-        const studentList = JSON.parse(sessionStorage.getItem("studentList")) || [];
+        let studentList = JSON.parse(sessionStorage.getItem("studentList")) || [];
 
-        if (!studentList || studentList.length < 1) { await getAllStudent() }
+        if (!studentList || studentList.length < 1) {
+            await getAllStudent()
+            studentList = JSON.parse(sessionStorage.getItem("studentList")) || [];
+        }
 
         findStudentById(studentList, mssvInput.value);
     }
