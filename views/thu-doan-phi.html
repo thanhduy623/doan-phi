@@ -164,9 +164,9 @@
     async function getInfoStudent() {
         if (mssvInput.value.length !== 8) return;
 
-        const studentList = sessionStorage.getItem("studentList");
+        const studentList = JSON.parse(sessionStorage.getItem("studentList")) || [];
 
-        if (!studentList) { await getAllStudent() }
+        if (!studentList || studentList.length < 1) { await getAllStudent() }
 
         findStudentById(studentList, mssvInput.value);
     }
@@ -176,10 +176,10 @@
             const result = await connectGAS("getAllStudent", {});
 
             if (result.success) {
-                sessionStorage.setItem("studentList", result.data)
+                sessionStorage.setItem("studentList", JSON.stringify(result.data));
                 console.log("Lấy danh sách sinh viên thành công");
             } else {
-                alert(result.message || "Không tìm thấy sinh viên");
+                alert(result.message || "Không thể tải dữ liệu sinh viên");
             }
 
         } catch (error) {
@@ -192,12 +192,12 @@
         const student = list.find(sv => sv.mssv === id);
 
         if (student) {
-            sttInput.value = result.data.stt || '';
-            lastnameInput.value = result.data.lastname || '';
-            firstnameInput.value = result.data.firstname || '';
-            facultyInput.value = result.data.faculty || '';
-            classInput.value = result.data.class || '';
-            yearSelect.value = 2000 + parseInt(classInput.value.substring(0, 2), 10);
+            sttInput.value = student.stt || '';
+            lastnameInput.value = student.lastname || '';
+            firstnameInput.value = student.firstname || '';
+            facultyInput.value = student.faculty || '';
+            classInput.value = student.class || '';
+            yearSelect.value = 2000 + parseInt(student.class.substring(0, 2), 10);
             computeFee();
         } else {
             alert("Không tìm thấy sinh viên có MSSV: " + id);
