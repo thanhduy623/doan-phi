@@ -37,6 +37,10 @@ export async function connectGAS(action, data) {
 
         const json = await response.json();
 
+        if (json.message = "Thiếu token xác thực.") {
+            window.location.href = "/doan-phi";
+        }
+
         return json;
 
     } finally {

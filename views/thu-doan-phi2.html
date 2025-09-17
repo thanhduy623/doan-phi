@@ -17,7 +17,7 @@
     </header>
 
     <div class="main-container">
-        <h1>THU ĐOÀN PHÍ</h1>
+        <h1>TRUY VẤN TỪNG SINH VIÊN</h1>
         <form id="studentForm">
             <div class="flex-row-container">
                 <div class="flex-col-container">
@@ -164,43 +164,29 @@
     async function getInfoStudent() {
         if (mssvInput.value.length !== 8) return;
 
-        const studentList = sessionStorage.getItem("studentList");
+        const mssv = mssvInput.value;
+        console.log({ mssv });
 
-        if (!studentList) { await getAllStudent() }
-
-        findStudentById(studentList, mssvInput.value);
-    }
-
-    async function getAllStudent() {
         try {
-            const result = await connectGAS("getAllStudent", {});
+            const result = await connectGAS("getInfoStudent", { mssv });
+            console.log(result);
 
             if (result.success) {
-                sessionStorage.setItem("studentList", result.data)
-                console.log("Lấy danh sách sinh viên thành công");
+                // Ví dụ: điền thông tin sinh viên vào form
+                sttInput.value = result.data.stt || '';
+                lastnameInput.value = result.data.lastname || '';
+                firstnameInput.value = result.data.firstname || '';
+                facultyInput.value = result.data.faculty || '';
+                classInput.value = result.data.class || '';
+                yearSelect.value = 2000 + parseInt(classInput.value.substring(0, 2), 10);
+                computeFee();
             } else {
                 alert(result.message || "Không tìm thấy sinh viên");
             }
 
         } catch (error) {
-            console.error("Lỗi khi lấy danh sách sinh viên:", error);
+            console.error("Lỗi khi lấy thông tin sinh viên:", error);
             alert("Có lỗi xảy ra khi lấy dữ liệu");
-        }
-    }
-
-    function findStudentById(list, id) {
-        const student = list.find(sv => sv.mssv === id);
-
-        if (student) {
-            sttInput.value = result.data.stt || '';
-            lastnameInput.value = result.data.lastname || '';
-            firstnameInput.value = result.data.firstname || '';
-            facultyInput.value = result.data.faculty || '';
-            classInput.value = result.data.class || '';
-            yearSelect.value = 2000 + parseInt(classInput.value.substring(0, 2), 10);
-            computeFee();
-        } else {
-            alert("Không tìm thấy sinh viên có MSSV: " + id);
         }
     }
 
