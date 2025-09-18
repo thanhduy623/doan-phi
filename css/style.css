@@ -77,6 +77,12 @@ select {
     margin-bottom: 16px;
 }
 
+input:focus,
+select:focus {
+    border: 2px solid var(--theme-color-1);
+    background-color: var(--theme-color-5);
+}
+
 
 .main-container {
     padding: 16px;
